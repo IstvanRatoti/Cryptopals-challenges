@@ -96,12 +96,11 @@ char * base64_encode(hex bytes)
 *   Decodes a base64 into a hex array.
 */
 hex base64_decode(char * base64str)
-{
-    int i, j, tmpnum = 0, b64val, slen=strlen(base64str);
-
-    int * numbers;
+{	
+    int i, j, tmpnum=0, b64val, slen=strlen(base64str);
 
     hex bytes;
+	
     if(slen%4)   //Check for a base64 string. If not, exit the function.
     {
         fprintf(stderr, "This is not a base64 string!\n");
@@ -115,10 +114,12 @@ hex base64_decode(char * base64str)
 
     for(i=0;i<slen;i++)
     {
+		printf("%c", base64str[i]);
+		
         b64val = decode_base64_char(base64str[i]);
 
-        //printf("0x%x %d\n", b64val, b64val);
-        //getchar();
+        printf("0x%x %c\n", b64val, indextable[b64val]);
+        getchar();
 
         if(-1!=b64val)
         {
@@ -129,8 +130,8 @@ hex base64_decode(char * base64str)
                 else if(2==(i%4))
                     b64val <<= 6;
 
-                //printf("0x%x\n", b64val);
-                //getchar();
+                printf("0x%x\n", b64val);
+                getchar();
 
                 tmpnum += b64val;
         }
@@ -144,18 +145,18 @@ hex base64_decode(char * base64str)
 
         if(3==(i%4))
         {
-            printf("%d 0x%x\n", i, tmpnum);
+            //printf("%d 0x%x\n", i, tmpnum);
 
             bytes.bytes[i-2] = tmpnum&0xff0000;
             bytes.bytes[i-2] >>= 16;
-            printf("0x%x\n", bytes.bytes[i-2]);
+            //printf("0x%x\n", bytes.bytes[i-2]);
 
             bytes.bytes[i-1] = tmpnum&0x00ff00;
             bytes.bytes[i-1] >>= 8;
-            printf("0x%x\n", bytes.bytes[i-1]);
+            //printf("0x%x\n", bytes.bytes[i-1]);
 
             bytes.bytes[i] = tmpnum&0x0000ff;
-            printf("0x%x\n", bytes.bytes[i]);
+            //printf("0x%x\n", bytes.bytes[i]);
 
             tmpnum = 0;
         }
@@ -169,8 +170,8 @@ hex base64_decode(char * base64str)
 */
 int decode_base64_char(char ch)
 {
-    int val;
-
+	printf("%d", ch);
+	
     if('+'==ch)
         return 62;
     else if('/'==ch)
@@ -180,7 +181,7 @@ int decode_base64_char(char ch)
     else if((64<ch)||(91>ch))
         return (int )(ch-65);
     else if((96<ch)||(123>ch))
-        return (int )(ch-66);
+        return (int )(ch-91);
 
     return -1;
 }

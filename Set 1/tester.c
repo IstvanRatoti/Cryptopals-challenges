@@ -23,8 +23,10 @@ int main(int argc, char *argv[])
     printf("%s\n", base64);
 
     original = base64_decode(base64);
+	
+	//base64 = hex2string(original, 1);
 
-    printf("%s\n", hex2string(original, 0));
+    //printf("%s\n", base64);
 
     free(original.bytes);
     free(testhex.bytes);
