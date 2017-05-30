@@ -96,11 +96,11 @@ char * base64_encode(hex bytes)
 *   Decodes a base64 into a hex array.
 */
 hex base64_decode(char * base64str)
-{	
+{
     int i, j, tmpnum=0, b64val, slen=strlen(base64str);
 
     hex bytes;
-	
+
     if(slen%4)   //Check for a base64 string. If not, exit the function.
     {
         fprintf(stderr, "This is not a base64 string!\n");
@@ -109,17 +109,17 @@ hex base64_decode(char * base64str)
         return bytes;
     }
 
-    bytes.bytes = (long int *)calloc(3*slen/4, sizeof(long int));
-    bytes.length = 3*slen/4;
+    bytes.bytes = (long int *)calloc(3*slen/4+1, sizeof(long int));
+    bytes.length = 3*slen/4+1;
 
     for(i=0;i<slen;i++)
     {
-		printf("%c", base64str[i]);
-		
+		//printf("%c", base64str[i]);
+
         b64val = decode_base64_char(base64str[i]);
 
-        printf("0x%x %c\n", b64val, indextable[b64val]);
-        getchar();
+        //printf("%d %c\n", b64val, indextable[b64val]);
+        //getchar();
 
         if(-1!=b64val)
         {
@@ -130,8 +130,8 @@ hex base64_decode(char * base64str)
                 else if(2==(i%4))
                     b64val <<= 6;
 
-                printf("0x%x\n", b64val);
-                getchar();
+                //printf("0x%x\n", b64val);
+                //getchar();
 
                 tmpnum += b64val;
         }
@@ -145,7 +145,7 @@ hex base64_decode(char * base64str)
 
         if(3==(i%4))
         {
-            //printf("%d 0x%x\n", i, tmpnum);
+            printf("%d 0x%x\n", i, tmpnum);
 
             bytes.bytes[i-2] = tmpnum&0xff0000;
             bytes.bytes[i-2] >>= 16;
@@ -162,6 +162,8 @@ hex base64_decode(char * base64str)
         }
     }
 
+    bytes.bytes[bytes.length] = 0x00;
+
     return bytes;
 }
 
@@ -170,18 +172,19 @@ hex base64_decode(char * base64str)
 */
 int decode_base64_char(char ch)
 {
-	printf("%d", ch);
-	
+	//printf("%c %d\n", ch, ch);
+	//getchar();
+
     if('+'==ch)
         return 62;
     else if('/'==ch)
         return 63;
     else if('='==ch)
         return 0;
-    else if((64<ch)||(91>ch))
+    else if((64<ch)&&(91>ch))
         return (int )(ch-65);
-    else if((96<ch)||(123>ch))
-        return (int )(ch-91);
+    else if((96<ch)&&(123>ch))
+        return (int )(ch-71);
 
     return -1;
 }
